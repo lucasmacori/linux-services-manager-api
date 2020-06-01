@@ -12,6 +12,10 @@ def get_service():
 @app.route('/api/v1/service/<name>', methods=['PUT'])
 def start_service(name):
     return services.start_service(name)
+    
+@app.route('/api/v1/service/<name>', methods=['DELETE'])
+def stop_service(name):
+    return services.stop_service(name)
 
 # Démarrage de l'API
 if __name__ == '__main__':
