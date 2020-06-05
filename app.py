@@ -33,6 +33,6 @@ def stop_service(name):
 
 # Démarrage de l'API
 if __name__ == '__main__':
-    app.run(host='127.0.0.1', port=5000)
-    # http_server = WSGIServer(('', 5000), app)
-    # http_server.serve_forever()
+    # app.run(host='127.0.0.1', port=5000)
+    http_server = WSGIServer(('', 5000), app)
+    http_server.serve_forever()
