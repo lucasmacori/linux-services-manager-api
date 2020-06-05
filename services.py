@@ -3,15 +3,28 @@ import psutil
 import response
 import subprocess
 
-def search_services():
-    try:
-        print(subprocess.run('who'))
-        services = []
-        for proc in psutil.process_iter(['name', 'pid']):
+def list_services(name = None):
+    services = []
+    # TODO: Utiliser la commande 'systemctl list-unit-files' à la place. Supprimer psutil
+    for proc in psutil.process_iter(['name', 'pid']):
+        if (name == None or name in str(proc.info['name'])):
             services.append(proc.info)
+    return services
+
+def search_services(name = None):
+    try:
+        services = list_services(name)
         return jsonify({ 'status': 'OK', 'services': services }), 200
     except:
         return response.error_500()
+
+def search_favorite_services(name = None):
+    try:
+        services = list_services(name)
+        return jsonify({ 'status': 'OK', 'services': services }), 200
+    except:
+        return response.error_500()
+
 
 def toggle_service(name, action):
     try:
