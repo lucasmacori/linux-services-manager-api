@@ -1,4 +1,4 @@
-from pony.orm import Database, Required
+from pony.orm import Database, Required, Optional
 from config import config
 import json
 
@@ -12,10 +12,11 @@ class Favorite_service(db.Entity):
 
 class User(db.Entity):
     name = Required(str, unique = True)
-    password = Required(str)
+    hash = Required(str)
+    token = Optional('Token')
 
 class Token(db.Entity):
-    user = Required('User')
+    user = Required(User)
     token = Required(str)
 
 db.generate_mapping(create_tables=True)
