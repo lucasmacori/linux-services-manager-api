@@ -77,6 +77,11 @@ def create_favorite_service(service):
         # Récupèration du service depuis le corps de la requête
         raw_service = json.loads(service)
 
+        # Récupèration du service existant
+        current_service = Favorite_service.get(name = raw_service['name'])
+        if current_service != None:
+            return jsonify({ 'status': 'KO', 'message': 'Un service avec le nom \'' + raw_service['name'] + '\' existe déjà' }), 400
+
         # Vérification des champs obligatoires
         if ((not 'name' in raw_service) or (raw_service['name'].strip() == '')):
             return jsonify({ 'status': 'KO', 'message': 'Vous devez renseigner un nom (\'name\')' }), 400

@@ -16,3 +16,4 @@ wrapt==1.12.1
 gevent
 pony
 pymysql
+py-bcrypt
