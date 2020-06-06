@@ -110,3 +110,5 @@ dmypy.json
 linux-services-manager-api/
 
 # End of https://www.gitignore.io/api/python
+
+config.json

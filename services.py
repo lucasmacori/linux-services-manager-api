@@ -1,6 +1,7 @@
 from flask import jsonify
-import response
-import subprocess
+from pony.orm import *
+import response, subprocess, json
+from entities import Favorite_service
 
 #
 # Méthodes de module
@@ -59,13 +60,73 @@ def search_services(name = None):
     except:
         return response.error_500()
 
-def search_favorite_services(name = None):
+@db_session
+def search_favorite_services(name = ''):
     try:
-        services = list_services(name)
+        services = []
+        raw_services = select(service for service in Favorite_service if (name in service.name)).order_by(Favorite_service.name)
+        for service in raw_services:
+            services.append({ 'name': service.name, 'serviceName': service.service_name })
         return jsonify({ 'status': 'OK', 'services': services }), 200
     except:
         return response.error_500()
 
+@db_session
+def create_favorite_service(service):
+    try:
+        # Récupèration du service depuis le corps de la requête
+        raw_service = json.loads(service)
+
+        # Vérification des champs obligatoires
+        if ((not 'name' in raw_service) or (raw_service['name'].strip() == '')):
+            return jsonify({ 'status': 'KO', 'message': 'Vous devez renseigner un nom (\'name\')' }), 400
+        if ((not 'serviceName' in raw_service) or (raw_service['serviceName'].strip() == '')):
+            return jsonify({ 'status': 'KO', 'message': 'Vous devez renseigner un nom de service (\'service_name\')' }), 400
+
+        # Enregistrement du service
+        service = Favorite_service(name = raw_service['name'], service_name = raw_service['serviceName'])
+        commit()
+
+        return jsonify({ 'status': 'OK' }), 201
+    except:
+       return response.error_500()
+       
+@db_session
+def edit_favorite_service(name, service):
+    try:
+        # Récupèration du service existant
+        current_service = Favorite_service.get(name = name)
+        if current_service == None:
+             return jsonify({ 'status': 'KO', 'message': 'Il n\'existe pas de service possèdant le nom \'' + str(name) + '\'' }), 400
+
+        # Récupèration du service depuis le corps de la requête
+        raw_service = json.loads(service)
+
+        # Enregistrement du service
+        if 'name' in raw_service and raw_service['name'].strip() != '':
+            current_service.name = raw_service['name']
+        if 'serviceName' in raw_service and raw_service['serviceName'].strip() != '':
+            current_service.service_name = raw_service['serviceName']
+        commit()
+
+        return jsonify({ 'status': 'OK' }), 200
+    except:
+       return response.error_500()
+
+@db_session
+def delete_favorite_service(name):
+    try:
+        # Récupèration du service existant
+        current_service = Favorite_service.get(name = name)
+        if current_service == None:
+             return jsonify({ 'status': 'KO', 'message': 'Il n\'existe pas de service possèdant le nom \'' + str(name) + '\'' }), 400
+
+        # Suppression du service
+        current_service.delete()
+
+        return jsonify({ 'status': 'OK' }), 200
+    except:
+       return response.error_500()  
 
 def toggle_service(name, action):
     try:
