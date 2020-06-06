@@ -59,7 +59,7 @@ Le fichier se structure comme ceci:
 
 **database**.**database**: Le nom de la base de données de l'API
 
-**ssl**: Si défini à **true**, l'API sera consultable via le protocole HTTPS. Plutôt que HTTP
+**ssl**: Si défini à **true**, l'API sera consultable via le protocole HTTPS. Plutôt que HTTP. Non disponible en mode debug.
 
 **cert**: Cette valeur est necéssaire si **ssl** est défini à **true**. Il s'agit du nom du fichier de certicat SSL
 

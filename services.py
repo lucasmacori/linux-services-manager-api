@@ -62,14 +62,20 @@ def search_services(name = None):
 
 @db_session
 def search_favorite_services(name = ''):
-    try:
-        services = []
-        raw_services = select(service for service in Favorite_service if (name in service.name)).order_by(Favorite_service.name)
-        for service in raw_services:
-            services.append({ 'name': service.name, 'serviceName': service.service_name })
-        return jsonify({ 'status': 'OK', 'services': services }), 200
-    except:
-        return response.error_500()
+    #try:
+    services = []
+    raw_services = select(service for service in Favorite_service if (name in service.name)).order_by(Favorite_service.name)
+    for service in raw_services:
+        # Récupèration de l'état du service
+        p = subprocess.Popen(['systemctl', 'is-active', service.service_name], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        output, err = p.communicate()
+        output = str(output, 'UTF-8').replace('\\n', '').strip()
+
+        # Ajout à la liste
+        services.append({ 'name': service.name, 'serviceName': service.service_name, 'active': output == 'active' })
+    return jsonify({ 'status': 'OK', 'services': services }), 200
+    #except:
+    #    return response.error_500()
 
 @db_session
 def create_favorite_service(service):
