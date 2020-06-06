@@ -93,5 +93,8 @@ if __name__ == '__main__':
     if config['debug']:
         app.run(host='127.0.0.1', port=int(config['port']))
     else:
-        http_server = WSGIServer(('', int(config['port'])), app)
+        if config['ssl'] and 'cert' in config and 'key' in config:
+            http_server = WSGIServer(('', int(config['port'])), app, certfile = config['cert'], keyfile = config['key'])
+        else:
+            http_server = WSGIServer(('', int(config['port'])), app)
         http_server.serve_forever()
