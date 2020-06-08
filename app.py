@@ -1,5 +1,6 @@
 from gevent.pywsgi import WSGIServer
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from pony.orm import *
 from config import config
 import services, json, auth
@@ -10,6 +11,9 @@ if config['debug']:
 
 # Création de l'application web
 app = Flask(__name__)
+
+# Configuration de CORS
+CORS(app)
 
 # Définition des routes de l'API
 @app.route('/api/v1/login', methods=['POST'])
