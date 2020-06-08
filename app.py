@@ -26,7 +26,7 @@ def get_service():
     if logged_in:
         return services.search_services()
     else:
-        return response 
+        return response, status_code 
 
 @app.route('/api/v1/services/<name>', methods=['GET'])
 def get_specific_service(name):
@@ -34,7 +34,7 @@ def get_specific_service(name):
     if logged_in:
         return services.search_services(name)
     else:
-        return response 
+        return response, status_code 
 
 @app.route('/api/v1/favorite/services', methods=['GET'])
 def get_favorite_service():
@@ -42,7 +42,7 @@ def get_favorite_service():
     if logged_in:
         return services.search_favorite_services()
     else:
-        return response
+        return response, status_code
 
 @app.route('/api/v1/favorite/services/<name>', methods=['GET'])
 def get_specific_favorite_service(name):
@@ -50,7 +50,7 @@ def get_specific_favorite_service(name):
     if logged_in:
         return services.search_favorite_services(name)
     else:
-        return response
+        return response, status_code
 
 @app.route('/api/v1/favorite/services', methods=['POST'])
 def create_favorite_service():
@@ -58,7 +58,7 @@ def create_favorite_service():
     if logged_in:
         return services.create_favorite_service(request.data)
     else:
-        return response
+        return response, status_code
 
 @app.route('/api/v1/favorite/services/<name>', methods=['PUT'])
 def edit_favorite_service(name):
@@ -66,7 +66,7 @@ def edit_favorite_service(name):
     if logged_in:
         return services.edit_favorite_service(name, request.data)
     else:
-        return response
+        return response, status_code
 
 @app.route('/api/v1/favorite/services/<name>', methods=['DELETE'])
 def delete_favorite_service(name):
@@ -74,7 +74,7 @@ def delete_favorite_service(name):
     if logged_in:
         return services.delete_favorite_service(name)
     else:
-        return response
+        return response, status_code
 
 @app.route('/api/v1/service/<name>', methods=['PUT'])
 def start_service(name):
@@ -82,7 +82,7 @@ def start_service(name):
     if logged_in:
         return services.start_service(name)
     else:
-        return response
+        return response, status_code
     
 @app.route('/api/v1/service/<name>', methods=['DELETE'])
 def stop_service(name):
@@ -90,7 +90,7 @@ def stop_service(name):
     if logged_in:
         return services.stop_service(name)
     else:
-        return response
+        return response, status_code
 
 # Démarrage de l'API
 if __name__ == '__main__':

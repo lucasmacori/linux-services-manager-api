@@ -47,9 +47,9 @@ def check_token(username, token):
     try:
         # Vérification des champs obligatoires
         if username == None or username.strip() == '':
-            return False, jsonify({ 'status': 'KO', 'message': 'Vous devez renseigner un nom d\'utilisateur dans l\'entête de la requête (\'username\')' }), 400
+            return False, jsonify({ 'status': 'KO', 'message': 'Vous devez renseigner un nom d\'utilisateur dans l\'entête de la requête (\'username\')' }), 401
         if token == None or token.strip() == '':
-            return False, jsonify({ 'status': 'KO', 'message': 'Vous devez renseigner un token dans l\'entête de la requête (\'token\')' }), 400
+            return False, jsonify({ 'status': 'KO', 'message': 'Vous devez renseigner un token dans l\'entête de la requête (\'token\')' }), 401
 
         # Vérification de l'existence de l'utilisateur
         user = User.get(name = username)
@@ -58,7 +58,7 @@ def check_token(username, token):
         else:
             token = Token.get(user = user, token = token)
             if token == None:
-                return False, jsonify({ 'status': 'KO', 'message': 'Le token est invalide' }), 400
+                return False, jsonify({ 'status': 'KO', 'message': 'Le token est invalide' }), 401
         return True, None, None
     except:
         return False, jsonify({ 'status': 'KO', 'message': 'Une erreur inattendue est survenue' }), 500
