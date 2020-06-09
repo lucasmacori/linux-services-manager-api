@@ -7,6 +7,7 @@ from entities import Favorite_service
 # Méthodes de module
 #
 
+@db_session
 def list_services(name = None):
     '''
     Liste les services activés sur le système
@@ -46,6 +47,15 @@ def list_services(name = None):
     services = []
     for service in raw_services:
         if (name == None or name in str(service['name'])):
+
+            # Recherche du service dans les services favoris
+            try:
+                db_service = Favorite_service.get(service_name=str(service['name']))
+                service['favorite'] = (db_service != None)
+            except:
+                service['favorite'] = False
+
+            # Ajout à la liste
             services.append(service)
     return services
 

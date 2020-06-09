@@ -8,7 +8,7 @@ db.bind(config['database'])
 
 class Favorite_service(db.Entity):
     name = Required(str, unique = True)
-    service_name = Required(str)
+    service_name = Required(str, unique = True)
 
 class User(db.Entity):
     name = Required(str, unique = True)
